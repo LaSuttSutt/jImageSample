@@ -9,7 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 @Stateless
-public class cCommonLogic {
+public class CommonLogic {
 
     @Inject
     private DataAccessManager data;

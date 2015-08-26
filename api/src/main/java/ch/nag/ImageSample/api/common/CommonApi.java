@@ -1,7 +1,7 @@
 package ch.nag.ImageSample.api.common;
 
 import ch.nag.ImageSample.domainModel.ImageTransfer;
-import ch.nag.ImageSample.logic.cCommonLogic;
+import ch.nag.ImageSample.logic.CommonLogic;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
@@ -14,7 +14,7 @@ import java.io.*;
 public class CommonApi {
 
     @Inject
-    private cCommonLogic commonLogic;
+    private CommonLogic commonLogic;
 
     @GET
     @Path("/getImage")
