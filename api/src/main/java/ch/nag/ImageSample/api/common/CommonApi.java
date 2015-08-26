@@ -1,34 +1,74 @@
 package ch.nag.ImageSample.api.common;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import java.io.File;
-import java.net.URL;
+import ch.nag.ImageSample.domainModel.ImageTransfer;
+import ch.nag.ImageSample.logic.cCommonLogic;
+
+import javax.imageio.ImageIO;
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 
 @Path("/common")
 public class CommonApi {
 
-    @GET
-    @Path("/{message}")
-    public String test(@PathParam("message") String message) {
-        return "Request succeeded: " + message;
-    }
+    @Inject
+    private cCommonLogic commonLogic;
 
     @GET
     @Path("/getImage")
-    public File getImage() {
+    @Produces("image/jpeg")
+    public byte[] getImage() {
 
-        ClassLoader classLoader = getClass().getClassLoader();
+        return commonLogic.getImage();
+    }
 
-        URL url = classLoader.getResource("files/TUS.png");
-        if (url == null)
-            return null;
+    @POST
+    @Path("/saveImage")
+    public void saveImage(ImageTransfer imageTransfer) throws IOException {
 
-        String loadedFileString = url.getFile();
-        if (loadedFileString == null)
-            return null;
+        InputStream in = new ByteArrayInputStream(imageTransfer.getImage());
+        BufferedImage bImageFromConvert = ImageIO.read(in);
+        in.close();
 
-        return new File(loadedFileString);
+        Image scaledImage = bImageFromConvert.getScaledInstance(imageTransfer.getClientWidth(), imageTransfer.getClientHeight(), Image.SCALE_AREA_AVERAGING);
+
+        BufferedImage bufferedThumbnail = new BufferedImage(imageTransfer.getCutWidth(), imageTransfer.getCutHeight(), BufferedImage.TYPE_INT_RGB);
+        bufferedThumbnail.getGraphics().drawImage(scaledImage, 0, 0, imageTransfer.getCutWidth(), imageTransfer.getCutHeight(),
+                imageTransfer.getCutLeft(), imageTransfer.getCutTop(), imageTransfer.getCutWidth() + imageTransfer.getCutLeft(),
+                imageTransfer.getCutTop() + imageTransfer.getCutHeight(), Color.WHITE, null);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(bufferedThumbnail, "jpeg", baos);
+        baos.flush();
+        commonLogic.storeImage(baos.toByteArray());
+        baos.close();
+    }
+
+    @POST
+    @Path("/storeImage")
+    public void storeImage(ImageTransfer imageTransfer) {
+
+        commonLogic.storeImage(imageTransfer.getImage());
+    }
+}
+
+class Test {
+    private String name;
+    private byte[] image;
+
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 }

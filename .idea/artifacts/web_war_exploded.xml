@@ -6,9 +6,11 @@
         <element id="directory" name="classes">
           <element id="module-output" name="web" />
           <element id="module-output" name="api" />
+          <element id="jpa-descriptors" facet="api/jpa/JPA" />
           <element id="module-output" name="ImageSample" />
         </element>
         <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: javax.ws.rs:javax.ws.rs-api:2.0.1" />
           <element id="library" level="project" name="Maven: org.flywaydb:flyway-core:3.2.1" />
         </element>
       </element>

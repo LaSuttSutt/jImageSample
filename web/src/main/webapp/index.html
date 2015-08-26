@@ -3,17 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>Test</title>
+    <link rel="stylesheet" type="text/css" href="css/imgareaselect-default.css" />
     <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/knockout/knockout.js"></script>
+    <script type="text/javascript" src="js/jquery.imgareaselect.pack.js"></script>
+    <script type="text/javascript" src="scripts/common.js"></script>
 </head>
 <body>
 <div>
     <h1>Test</h1>
-    <img id="imgTest" src="api/common/getImage">
+    <img id="imgTest" src="api/common/getImage" style="max-width: 200px">
     <button onclick="$('#imgTest')[0].src = null;">Clear</button>
     <button onclick="$('#imgTest')[0].src = 'api/common/getImage'">Reset</button>
+    <button onclick="saveImage();">Save Image</button>
 </div>
 <div>
-    <a href="api/common/Salli">Save</a>
+    <h4>Bild auswählen</h4>
+    <input type="file" name="pic" accept="image/*" onchange="previewImage(this)">
 </div>
 </body>
 </html>
+
+<script>
+    $(document).ready(function() {
+        $('#imgTest').imgAreaSelect({
+            handles: true,
+            aspectRatio: "1:1",
+            onSelectEnd: function (img, selection) {
+                areaSelect = {
+                    image: img,
+                    selection: selection
+                }
+            }
+        });
+    });
+</script>
